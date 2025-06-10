@@ -95,7 +95,8 @@ st.caption(app_descriptions[application])
 # Initialize system
 system = GeoscienceAnalysisSystem(application=application)
 
-# Main dashboard layout
+# # ... existing code ...
+
 if uploaded_file and run_analysis:
     data = load_well_data(uploaded_file, application=application, units=units)
     df = pd.DataFrame(data)
@@ -103,19 +104,28 @@ if uploaded_file and run_analysis:
     with st.expander("Raw Data Preview"):
         st.dataframe(df.head(10))
 
-    # FIXED: Use status container instead of text parameter
     status_container = st.empty()
     progress_bar = st.progress(0)
     status_container.write("Analyzing subsurface data...")
 
-    # Pass parameters to analysis
+    # Prepare parameters
     analysis_params = {}
-    if trap_threshold: analysis_params["trap_threshold"] = trap_threshold
-    if leak_threshold: analysis_params["leak_threshold"] = leak_threshold
-    if temp_threshold: analysis_params["temp_threshold"] = temp_threshold
+    if trap_threshold: 
+        analysis_params["trap_threshold"] = trap_threshold
+    if leak_threshold: 
+        analysis_params["leak_threshold"] = leak_threshold
+    if temp_threshold: 
+        analysis_params["temp_threshold"] = temp_threshold
     
+    # Pass parameters correctly
     results = system.analyze_dataset(data, **analysis_params)
-    
+    except Exception as e:
+        progress_bar.progress(100)
+        status_container.write("Analysis failed!")
+        st.error(f"❌ Analysis failed: {e}")
+        st.exception(e)  # Show the exception and traceback in the app
+        st.stop()
+
     # Update progress with new method
     progress_bar.progress(40)
     status_container.write("Generating visualizations...")
