@@ -110,18 +110,18 @@ if uploaded_file and run_analysis:
     status_container.write("Analyzing subsurface data...")
     progress_bar.progress(20)  # Initial progress
 
-    # Prepare parameters
-    analysis_params = {}
-    if trap_threshold: 
-        analysis_params["trap_threshold"] = trap_threshold
-    if leak_threshold: 
-        analysis_params["leak_threshold"] = leak_threshold
-    if temp_threshold: 
-        analysis_params["temp_threshold"] = temp_threshold
+    # FIX: Set thresholds as system attributes instead of passing as parameters
+    if trap_threshold is not None: 
+        system.trap_threshold = trap_threshold
+    if leak_threshold is not None: 
+        system.leak_threshold = leak_threshold
+    if temp_threshold is not None: 
+        system.temp_threshold = temp_threshold
     
     # CORRECTED ANALYSIS CALL WITH ERROR HANDLING
     try:
-        results = system.analyze_dataset(data, **analysis_params)
+        # Now call without parameters since thresholds are set as attributes
+        results = system.analyze_dataset(data)
     except Exception as e:
         progress_bar.progress(100)
         status_container.write("Analysis failed!")
@@ -130,10 +130,6 @@ if uploaded_file and run_analysis:
         st.stop()
     
     # Continue with visualization
-    progress_bar.progress(40)
-    status_container.write("Generating visualizations...")
-    
-    # Update progress with new method
     progress_bar.progress(40)
     status_container.write("Generating visualizations...")
 
@@ -355,4 +351,4 @@ if os.path.exists(sample_data[application]):
             f,
             file_name=f"sample_{application}_data.csv",
             mime="text/csv"
-    )
+)
