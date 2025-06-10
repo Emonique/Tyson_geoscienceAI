@@ -1,4 +1,4 @@
-# core/entropy_calculation.py
+# core/entropy_calc.py
 import numpy as np
 from scipy.stats import gaussian_kde
 
