@@ -104,9 +104,11 @@ if uploaded_file and run_analysis:
     with st.expander("Raw Data Preview"):
         st.dataframe(df.head(10))
 
+    # Initialize progress AFTER data loading
     status_container = st.empty()
     progress_bar = st.progress(0)
     status_container.write("Analyzing subsurface data...")
+    progress_bar.progress(20)  # Initial progress
 
     # Prepare parameters
     analysis_params = {}
@@ -117,15 +119,20 @@ if uploaded_file and run_analysis:
     if temp_threshold: 
         analysis_params["temp_threshold"] = temp_threshold
     
-    # Pass parameters correctly
-    results = system.analyze_dataset(data, **analysis_params)
+    # CORRECTED ANALYSIS CALL WITH ERROR HANDLING
+    try:
+        results = system.analyze_dataset(data, **analysis_params)
     except Exception as e:
         progress_bar.progress(100)
         status_container.write("Analysis failed!")
         st.error(f"❌ Analysis failed: {e}")
-        st.exception(e)  # Show the exception and traceback in the app
+        st.exception(e)
         st.stop()
-
+    
+    # Continue with visualization
+    progress_bar.progress(40)
+    status_container.write("Generating visualizations...")
+    
     # Update progress with new method
     progress_bar.progress(40)
     status_container.write("Generating visualizations...")
