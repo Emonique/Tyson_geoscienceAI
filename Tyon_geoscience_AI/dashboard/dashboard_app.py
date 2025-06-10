@@ -25,14 +25,11 @@ except ImportError as e:
     st.error(f"Import Error: {e}")
     st.stop()
 
-# Rest of your code remains unchanged...
 # Create reports directory if not exists
 os.makedirs("reports", exist_ok=True)
 
 # Dashboard title (now after page config)
 st.title("🌋 Tyon Geoscience AI - Subsurface Analysis Dashboard")
-
-# ... rest of your original code continues below ...
 
 # Sidebar controls
 with st.sidebar:
@@ -60,6 +57,9 @@ with st.sidebar:
     st.divider()
     st.subheader("Analysis Parameters")
 
+    # Initialize parameters to avoid reference before assignment
+    trap_threshold = leak_threshold = temp_threshold = None
+    
     if application == "hydrocarbon":
         trap_threshold = st.slider(
             "Trap Confidence Threshold", 
@@ -103,10 +103,22 @@ if uploaded_file and run_analysis:
     with st.expander("Raw Data Preview"):
         st.dataframe(df.head(10))
 
-    progress_bar = st.progress(0, text="Analyzing subsurface data...")
+    # FIXED: Use status container instead of text parameter
+    status_container = st.empty()
+    progress_bar = st.progress(0)
+    status_container.write("Analyzing subsurface data...")
 
-    results = system.analyze_dataset(data)
-    progress_bar.progress(40, text="Generating visualizations...")
+    # Pass parameters to analysis
+    analysis_params = {}
+    if trap_threshold: analysis_params["trap_threshold"] = trap_threshold
+    if leak_threshold: analysis_params["leak_threshold"] = leak_threshold
+    if temp_threshold: analysis_params["temp_threshold"] = temp_threshold
+    
+    results = system.analyze_dataset(data, **analysis_params)
+    
+    # Update progress with new method
+    progress_bar.progress(40)
+    status_container.write("Generating visualizations...")
 
     st.subheader("Integrated Analysis Dashboard")
     col1, col2 = st.columns(2)
@@ -201,7 +213,10 @@ if uploaded_file and run_analysis:
     fig.colorbar(sc, ax=axs[2, 1], label='Entropy (bits)')
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    progress_bar.progress(70, text="Finalizing dashboard...")
+    
+    # Update progress
+    progress_bar.progress(70)
+    status_container.write("Finalizing dashboard...")
 
     col1, col2 = st.columns([3, 1])
     with col1:
@@ -228,14 +243,16 @@ if uploaded_file and run_analysis:
 
         st.dataframe(results_df.sort_values('confidence', ascending=False))
 
-        if application == "contamination" and any(results_df['leak_risk']):
+        if application == "contamination" and any(results_df.get('leak_risk', [])):
             leak_zones = results_df[results_df['leak_risk']]
             st.warning(f"⚠️ High leak risk detected at {len(leak_zones)} depth(s)")
             st.dataframe(leak_zones)
     else:
         st.warning("⚠️ No significant zones detected with current parameters")
 
-    progress_bar.progress(100, text="Analysis complete!")
+    # Final progress update
+    progress_bar.progress(100)
+    status_container.write("Analysis complete!")
     st.balloons()
 
     with col2:
@@ -321,4 +338,4 @@ if os.path.exists(sample_data[application]):
             f,
             file_name=f"sample_{application}_data.csv",
             mime="text/csv"
-        )
+    )
