@@ -16,6 +16,10 @@ class GeoscienceAnalysisSystem:
     def __init__(self, application='hydrocarbon'):
         self.geo_memory = []
         self.application = application
+        # Initialize thresholds to None
+        self.trap_threshold = None
+        self.leak_threshold = None
+        self.temp_threshold = None
     
     def analyze_point(self, data_point):
         """Analyze a single data point"""
@@ -95,10 +99,13 @@ class GeoscienceAnalysisSystem:
         # Now run trap prediction on the entire analyzed dataset
         predictions = trap_predictor.predict_traps(
             self.geo_memory, 
-            application=self.application
+            application=self.application,
+            trap_threshold=self.trap_threshold,
+            leak_threshold=self.leak_threshold,
+            temp_threshold=self.temp_threshold
         )
         
         return {
             "data_points": self.geo_memory,
             "predictions": predictions
-          }
+            }
