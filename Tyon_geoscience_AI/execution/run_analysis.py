@@ -9,6 +9,7 @@ sys.path.insert(0, parent_dir)
 import numpy as np
 from core.fractal_analysis import compute_fractal_dimension
 from core import entropy_calc, rqi_model, trap_predictor
+from utils import data_loader, data_simulator, unit_converter
 
 class GeoscienceAnalysisSystem:
     """Integrated analysis system for geological applications"""
@@ -43,9 +44,9 @@ class GeoscienceAnalysisSystem:
         # Get permeability
         permeability = data_point.get('permeability', 100)
         
-        # Core calculations
-fractal_dim = compute_fractal_dimension(porosity)
-        geo_entropy = entropy_calc.shannon_entropy(porosity)
+        # Core calculations - FIXED INDENTATION HERE
+        fractal_dim = compute_fractal_dimension(porosity)
+        geo_entropy = entropy_calc.shannon_entropy(porosity)  # Line 48 - fixed
         
         # Calculate pressure and temperature if not provided
         if 'pressure' not in data_point:
