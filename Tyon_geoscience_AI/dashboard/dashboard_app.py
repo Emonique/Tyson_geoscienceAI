@@ -3,7 +3,6 @@ import streamlit as st  # Must be first Streamlit import
 # Set page config FIRST - must be before any other Streamlit commands
 st.set_page_config(page_title="Tyon Geoscience AI", layout="wide")
 
-# Now proceed with other imports
 import sys
 import os
 from pathlib import Path
@@ -11,11 +10,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-
-from pathlib import Path
-import sys
-import os
-import streamlit as st
 
 # ──── CRITICAL FIX: Add project root to Python path ────
 current_dir = Path(__file__).resolve().parent  # /Tyon_geoscience_AI/dashboard
