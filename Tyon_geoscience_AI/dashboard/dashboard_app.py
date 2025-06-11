@@ -12,6 +12,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+from pathlib import Path
+import sys
+import os
+import streamlit as st
+
 # ──── CRITICAL FIX: Add project root to Python path ────
 current_dir = Path(__file__).resolve().parent  # /Tyon_geoscience_AI/dashboard
 project_root = current_dir.parent  # /Tyon_geoscience_AI
