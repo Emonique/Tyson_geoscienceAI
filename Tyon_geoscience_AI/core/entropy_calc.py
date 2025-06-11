@@ -19,3 +19,9 @@ class EntropyCalculator:
             return kde.entropy()
         except:
             return np.nan
+
+# Add this function to match what the code expects
+def shannon_entropy(data, min_samples=10, bandwidth='scott'):
+    """Calculate Shannon entropy using the EntropyCalculator class"""
+    calculator = EntropyCalculator(min_samples=min_samples, bandwidth=bandwidth)
+    return calculator.calculate(data)
