@@ -46,7 +46,7 @@ class GeoscienceAnalysisSystem:
         
         # Core calculations - FIXED INDENTATION HERE
         fractal_dim = compute_fractal_dimension(porosity)
-geo_entropy = shannon_entropy(porosity)  # Line 48 - fixed
+   geo_entropy = shannon_entropy(porosity)
         
         # Calculate pressure and temperature if not provided
         if 'pressure' not in data_point:
