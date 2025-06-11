@@ -7,8 +7,8 @@ parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
 sys.path.insert(0, parent_dir)
 
 import numpy as np
-from core import fractal_analysis, entropy_calc, rqi_model, trap_predictor
-from utils import data_loader, data_simulator, unit_converter
+from core.fractal_analysis import compute_fractal_dimension
+from core import entropy_calc, rqi_model, trap_predictor
 
 class GeoscienceAnalysisSystem:
     """Integrated analysis system for geological applications"""
@@ -44,7 +44,7 @@ class GeoscienceAnalysisSystem:
         permeability = data_point.get('permeability', 100)
         
         # Core calculations
-        fractal_dim = fractal_analysis.compute_fractal_dimension(porosity)
+fractal_dim = compute_fractal_dimension(porosity)
         geo_entropy = entropy_calc.shannon_entropy(porosity)
         
         # Calculate pressure and temperature if not provided
