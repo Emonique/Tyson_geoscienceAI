@@ -44,9 +44,9 @@ class GeoscienceAnalysisSystem:
         # Get permeability
         permeability = data_point.get('permeability', 100)
         
-        # Core calculations - FIXED INDENTATION HERE
+        # Core calculations
         fractal_dim = compute_fractal_dimension(porosity)
-   geo_entropy = shannon_entropy(porosity)
+        geo_entropy = shannon_entropy(porosity)
         
         # Calculate pressure and temperature if not provided
         if 'pressure' not in data_point:
@@ -109,4 +109,4 @@ class GeoscienceAnalysisSystem:
         return {
             "data_points": self.geo_memory,
             "predictions": predictions
-            }
+        }
